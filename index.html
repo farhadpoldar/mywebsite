@@ -249,3 +249,171 @@
   </script>
 </body>
 </html>
+<script>
+/* =====================
+   GLOBAL USER STATE
+   ===================== */
+let user = {
+  username: "Farhad",
+  points: 0,
+  vip: false,
+  gamesPlayed: 0
+};
+
+/* =====================
+   UI UPDATE
+   ===================== */
+function updateHUD() {
+  document.getElementById("hudPoints").innerText = user.points;
+  document.getElementById("hudVip").innerText = user.vip ? "فعال 💎" : "غیرفعال";
+}
+
+/* =====================
+   POINT SYSTEM
+   ===================== */
+function addPoints(amount, reason = "") {
+  let bonus = user.vip ? 2 : 1;
+  let total = amount * bonus;
+
+  user.points += total;
+  user.gamesPlayed++;
+
+  updateHUD();
+
+  console.log(`+${total} امتیاز | ${reason}`);
+}
+
+/* =====================
+   EXTEND SNAKE GAME
+   ===================== */
+let score = 0;
+
+function drawSnakeGame() {
+  ctx.fillStyle = '#020617';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  snake.forEach((s, i) => {
+    ctx.fillStyle = i === 0 ? '#22c55e' : '#16a34a';
+    ctx.fillRect(s.x, s.y, box, box);
+  });
+
+  ctx.fillStyle = '#ef4444';
+  ctx.fillRect(food.x, food.y, box, box);
+
+  let headX = snake[0].x;
+  let headY = snake[0].y;
+
+  if (direction === 'LEFT') headX -= box;
+  if (direction === 'UP') headY -= box;
+  if (direction === 'RIGHT') headX += box;
+  if (direction === 'DOWN') headY += box;
+
+  if (headX === food.x && headY === food.y) {
+    food = spawnFood();
+    score += 10;
+    addPoints(10, "Snake Food");
+  } else {
+    snake.pop();
+  }
+
+  const newHead = { x: headX, y: headY };
+
+  if (
+    headX < 0 || headY < 0 ||
+    headX >= canvas.width || headY >= canvas.height ||
+    collision(newHead, snake)
+  ) {
+    alert("باختی 😅 امتیاز بازی ثبت شد");
+    score = 0;
+    snake = [{ x: 9 * box, y: 10 * box }];
+    direction = null;
+  }
+
+  snake.unshift(newHead);
+}
+
+/* =====================
+   EXTEND TIC TAC TOE
+   ===================== */
+function playMove(i) {
+  if (cells[i] || checkWinner()) return;
+
+  cells[i] = current;
+
+  if (checkWinner()) {
+    status.textContent = 'برنده: ' + current;
+    if (current === "X") {
+      addPoints(50, "TicTacToe Win");
+    }
+  } else if (!cells.includes(null)) {
+    status.textContent = 'مساوی 🤝';
+    addPoints(10, "TicTacToe Draw");
+  } else {
+    current = current === 'X' ? 'O' : 'X';
+    status.textContent = 'نوبت ' + current;
+  }
+
+  renderBoard();
+}
+
+/* =====================
+   WALLET & CASHOUT
+   ===================== */
+function requestCashout() {
+  if (user.points < 1000) {
+    alert("حداقل 1000 امتیاز برای برداشت لازمه");
+    return;
+  }
+
+  user.points -= 1000;
+  updateHUD();
+
+  alert("درخواست برداشت ثبت شد 💰 (نمونه)");
+}
+
+/* =====================
+   VIP SYSTEM
+   ===================== */
+function buyVIP() {
+  // اینجا بعداً به زرین‌پال وصل میشه
+  user.vip = true;
+  updateHUD();
+  alert("VIP فعال شد 💎 (نمونه)");
+}
+
+/* =====================
+   SIMPLE HUD
+   ===================== */
+const hud = document.createElement("div");
+hud.style.position = "fixed";
+hud.style.bottom = "15px";
+hud.style.left = "15px";
+hud.style.background = "#020617";
+hud.style.border = "2px solid #2563eb";
+hud.style.borderRadius = "14px";
+hud.style.padding = "12px 16px";
+hud.style.fontSize = "14px";
+hud.innerHTML = `
+  <div>⭐ امتیاز: <b id="hudPoints">0</b></div>
+  <div>💎 VIP: <b id="hudVip">غیرفعال</b></div>
+  <button onclick="requestCashout()" style="margin-top:8px;">برداشت</button>
+  <button onclick="buyVIP()" style="margin-top:6px;">خرید VIP</button>
+`;
+document.body.appendChild(hud);
+
+updateHUD();
+
+/* =====================
+   FUTURE BACKEND API (READY)
+   ===================== */
+// fetch('https://api.yoursite.com/save-score', {
+//   method: 'POST',
+//   headers: { 'Content-Type': 'application/json' },
+//   body: JSON.stringify({
+//     user: user.username,
+//     points: user.points
+//   })
+// });
+
+</script>
+
