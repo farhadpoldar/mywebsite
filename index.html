@@ -7,130 +7,30 @@
   <style>
     * { box-sizing: border-box; font-family: Arial, sans-serif; }
     body { margin: 0; background: #0f172a; color: #e5e7eb; }
-    header {
-      padding: 20px;
-      text-align: center;
-      background: linear-gradient(135deg, #2563eb, #1e40af);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-    }
+    header { padding: 20px; text-align: center; background: linear-gradient(135deg, #2563eb, #1e40af); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
     header h1 { margin: 0; }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-top: 15px;
-      flex-wrap: wrap;
-    }
-    nav button {
-      padding: 10px 18px;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      background: #020617;
-      color: #93c5fd;
-      font-size: 15px;
-      transition: 0.3s;
-    }
+    nav { display: flex; justify-content: center; gap: 15px; margin-top: 15px; flex-wrap: wrap; }
+    nav button { padding: 10px 18px; border-radius: 12px; border: none; cursor: pointer; background: #020617; color: #93c5fd; font-size: 15px; transition: 0.3s; }
     nav button:hover { background: #020617cc; transform: scale(1.05); }
     main { padding: 30px; max-width: 1200px; margin: auto; }
-    .game {
-      display: none;
-      margin-top: 30px;
-      background: #020617;
-      padding: 25px;
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-    }
+    .game { display: none; margin-top: 30px; background: #020617; padding: 25px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
     .game.active { display: block; }
-    canvas {
-      background: #020617;
-      border: 2px solid #2563eb;
-      display: block;
-      margin: 20px auto;
-    }
+    canvas { background: #020617; border: 2px solid #2563eb; display: block; margin: 20px auto; }
     .info { text-align: center; margin-top: 10px; }
-    .board {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      gap: 10px;
-      justify-content: center;
-      margin-top: 20px;
-    }
-    .cell {
-      width: 100px;
-      height: 100px;
-      background: #020617;
-      border: 2px solid #2563eb;
-      font-size: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+    .board { display: grid; grid-template-columns: repeat(3, 100px); gap: 10px; justify-content: center; margin-top: 20px; }
+    .cell { width: 100px; height: 100px; background: #020617; border: 2px solid #2563eb; font-size: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
     .cell:hover { background: #020617cc; transform: scale(1.05); }
-    footer {
-      margin-top: 50px;
-      text-align: center;
-      opacity: 0.6;
-      font-size: 14px;
-    }
-    /* HUD */
-    #hud {
-      position: fixed;
-      bottom: 15px;
-      left: 15px;
-      background: #020617;
-      border: 2px solid #2563eb;
-      border-radius: 14px;
-      padding: 12px 16px;
-      font-size: 14px;
-      z-index: 1000;
-    }
-    #hud button {
-      margin-top: 6px;
-      padding: 6px 12px;
-      font-size: 12px;
-    }
-    /* Leaderboard Table */
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      color: #e5e7eb;
-    }
-    th, td {
-      border: 1px solid #2563eb;
-      padding: 8px;
-      text-align: center;
-    }
+    footer { margin-top: 50px; text-align: center; opacity: 0.6; font-size: 14px; }
+    #hud { position: fixed; bottom: 15px; left: 15px; background: #020617; border: 2px solid #2563eb; border-radius: 14px; padding: 12px 16px; font-size: 14px; z-index: 1000; }
+    #hud button { margin-top: 6px; padding: 6px 12px; font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; color: #e5e7eb; }
+    th, td { border: 1px solid #2563eb; padding: 8px; text-align: center; }
     th { background: #1e40af; }
     tr:nth-child(even) { background: #111827; }
     tr:hover { background: #2563eb33; }
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.8);
-    }
-    .modal-content {
-      background-color: #0f172a;
-      margin: 15% auto;
-      padding: 20px;
-      border: 2px solid #2563eb;
-      width: 400px;
-      border-radius: 16px;
-      text-align: center;
-    }
-    .modal-content button {
-      margin-top: 15px;
-    }
+    .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); }
+    .modal-content { background-color: #0f172a; margin: 15% auto; padding: 20px; border: 2px solid #2563eb; width: 400px; border-radius: 16px; text-align: center; }
+    .modal-content button { margin-top: 15px; }
   </style>
 </head>
 <body>
@@ -148,475 +48,144 @@
 </header>
 
 <main>
-  <!-- Home -->
   <section id="home" class="game active">
     <h2>Welcome 👋</h2>
-    <p>This is a demo game hub with simple JavaScript games. Compete to be in the top 3 for prizes!</p>
-    <ul>
-      <li>🐍 Snake Game</li>
-      <li>❌⭕ Tic Tac Toe</li>
-    </ul>
+    <p>Compete in games to be in the top 3 and earn rewards!</p>
   </section>
 
-  <!-- Snake -->
   <section id="snake" class="game">
     <h2>🐍 Snake Game</h2>
     <canvas id="snakeCanvas" width="400" height="400"></canvas>
     <div class="info">Use arrow keys to play</div>
   </section>
 
-  <!-- Tic Tac Toe -->
   <section id="ttt" class="game">
     <h2>❌⭕ Tic Tac Toe</h2>
     <div class="board" id="board"></div>
     <div class="info" id="status">Turn X</div>
   </section>
 
-  <!-- Leaderboard -->
   <section id="leaderboard" class="game">
     <h2>🏆 Leaderboard</h2>
     <table id="leaderboardTable">
       <thead>
         <tr><th>Rank</th><th>Username</th><th>Points</th></tr>
       </thead>
-      <tbody>
-      </tbody>
+      <tbody></tbody>
     </table>
   </section>
 
-  <!-- VIP -->
   <section id="vip" class="game">
     <h2>💎 VIP Membership</h2>
     <p>Subscribe to VIP for enhanced features and eligibility for top 3 rewards!</p>
     <button onclick="buyVIP()">Subscribe VIP ($5/month)</button>
   </section>
-
 </main>
 
-<footer>
-  Built with ❤️ by Farhad
-</footer>
+<footer>Built with ❤️ by Farhad</footer>
 
 <div id="hud">
   <div>⭐ Points: <b id="hudPoints">0</b></div>
   <div>💎 VIP: <b id="hudVip">Inactive</b></div>
+  <div>🎯 Level: <b id="hudLevel">1</b></div>
   <button onclick="requestCashout()">Request Reward</button>
 </div>
 
-<!-- Modal -->
 <div id="modal" class="modal">
-  <div class="modal-content" id="modalContent">
+  <div class="modal-content">
     <p id="modalText"></p>
     <button onclick="closeModal()">Close</button>
   </div>
 </div>
 
-<script>
-/* =====================
-   NAVIGATION
-===================== */
-function showGame(id) {
-  document.querySelectorAll('.game').forEach(g => g.classList.remove('active'));
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+// ======= Replace these with your Supabase project info =======
+const supabaseUrl = 'https://lbufvysxhetqsbrefbwy.supabase.co';
+const supabaseKey = 'process.env.SUPABASE_KEY';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// ======= NAVIGATION =======
+function showGame(id){
+  document.querySelectorAll('.game').forEach(g=>g.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-/* =====================
-   GLOBAL USER STATE
-===================== */
-let user = {
-  username: "Player1",
-  points: 0,
-  vip: false,
-  gamesPlayed: 0
-};
+// ======= GLOBAL USER =======
+let user = { username: "Player1", points:0, vip:false, level:1, exp:0, gamesPlayed:0, achievements:[] };
 
-/* =====================
-   HUD UPDATE
-===================== */
-function updateHUD() {
+// ======= HUD =======
+function updateHUD(){
   document.getElementById("hudPoints").innerText = user.points;
-  document.getElementById("hudVip").innerText = user.vip ? "Active 💎" : "Inactive";
+  document.getElementById("hudVip").innerText = user.vip?"Active 💎":"Inactive";
+  document.getElementById("hudLevel").innerText = user.level;
 }
 updateHUD();
 
-/* =====================
-   MODAL
-===================== */
-function showModal(msg) {
-  document.getElementById("modalText").innerText = msg;
-  document.getElementById("modal").style.display = "block";
-}
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-}
+// ======= MODAL =======
+function showModal(msg){ document.getElementById("modalText").innerText=msg; document.getElementById("modal").style.display="block"; }
+function closeModal(){ document.getElementById("modal").style.display="none"; }
 
-/* =====================
-   POINT SYSTEM
-===================== */
-function addPoints(amount, reason="") {
-  let bonus = user.vip ? 2 : 1;
-  let total = amount * bonus;
-  user.points += total;
-  user.gamesPlayed++;
-  updateHUD();
-  console.log(`+${total} points | ${reason}`);
+// ======= POINT & EXP =======
+function addPoints(amount, reason=""){ let bonus = user.vip?2:1; let total = amount*bonus; user.points+=total; user.gamesPlayed++; addExp(Math.floor(amount/2)); updateHUD(); saveScoreToDB(user.username,user.points); }
+function addExp(amount){ user.exp+=amount; const expNeeded=user.level*100; if(user.exp>=expNeeded){ user.level++; user.exp-=expNeeded; showModal(`Level Up! 🎉 You are now Level ${user.level}`); } updateHUD(); checkAchievements(); }
+
+// ======= ACHIEVEMENTS =======
+function checkAchievements(){
+  if(user.gamesPlayed>=10 && !user.achievements.includes("Gamer Beginner")){ user.achievements.push("Gamer Beginner"); showModal("Achievement Unlocked 🏆: Gamer Beginner"); }
+  if(user.points>=500 && !user.achievements.includes("Point Collector")){ user.achievements.push("Point Collector"); showModal("Achievement Unlocked 🏆: Point Collector"); }
 }
 
-/* =====================
-   SNAKE GAME
-===================== */
-const canvas = document.getElementById('snakeCanvas');
-const ctx = canvas.getContext('2d');
-const box = 20;
-let snake = [{ x: 9*box, y: 10*box }];
-let direction = null;
-let food = spawnFood();
-let snakeScore = 0;
-
-document.addEventListener('keydown', e => {
-  if(e.key==='ArrowLeft' && direction!=='RIGHT') direction='LEFT';
-  if(e.key==='ArrowUp' && direction!=='DOWN') direction='UP';
-  if(e.key==='ArrowRight' && direction!=='LEFT') direction='RIGHT';
-  if(e.key==='ArrowDown' && direction!=='UP') direction='DOWN';
-});
-
-function spawnFood() {
-  return {
-    x: Math.floor(Math.random()*19+1)*box,
-    y: Math.floor(Math.random()*19+1)*box
-  };
-}
-
-function collision(head,array){
-  return array.some(seg => seg.x===head.x && seg.y===head.y);
-}
-
-function drawSnakeGame() {
-  ctx.fillStyle = '#020617';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  snake.forEach((s,i)=>{
-    ctx.fillStyle = i===0?'#22c55e':'#16a34a';
-    ctx.fillRect(s.x,s.y,box,box);
-  });
-
-  ctx.fillStyle = '#ef4444';
-  ctx.fillRect(food.x,food.y,box,box);
-
-  let headX = snake[0].x;
-  let headY = snake[0].y;
-
-  if(direction==='LEFT') headX-=box;
-  if(direction==='UP') headY-=box;
-  if(direction==='RIGHT') headX+=box;
-  if(direction==='DOWN') headY+=box;
-
-  if(headX===food.x && headY===food.y){
-    food=spawnFood();
-    snakeScore+=10;
-    addPoints(10,"Snake Food");
-  } else {
-    snake.pop();
-  }
-
-  const newHead = {x:headX,y:headY};
-
+// ======= SNAKE =======
+const canvas = document.getElementById('snakeCanvas'); const ctx = canvas.getContext('2d'); const box = 20; let snake=[{x:9*box,y:10*box}], direction=null, food=spawnFood(), snakeScore=0;
+document.addEventListener('keydown', e=>{ if(e.key==='ArrowLeft'&&direction!=='RIGHT')direction='LEFT'; if(e.key==='ArrowUp'&&direction!=='DOWN')direction='UP'; if(e.key==='ArrowRight'&&direction!=='LEFT')direction='RIGHT'; if(e.key==='ArrowDown'&&direction!=='UP')direction='DOWN'; });
+function spawnFood(){ return { x: Math.floor(Math.random()*19+1)*box, y: Math.floor(Math.random()*19+1)*box }; }
+function collision(head,array){ return array.some(seg=>seg.x===head.x&&seg.y===head.y); }
+function drawSnakeGame(){
+  ctx.fillStyle='#020617'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  snake.forEach((s,i)=>{ ctx.fillStyle=i===0?'#22c55e':'#16a34a'; ctx.fillRect(s.x,s.y,box,box); });
+  ctx.fillStyle='#ef4444'; ctx.fillRect(food.x,food.y,box,box);
+  let headX=snake[0].x, headY=snake[0].y;
+  if(direction==='LEFT') headX-=box; if(direction==='UP') headY-=box; if(direction==='RIGHT') headX+=box; if(direction==='DOWN') headY+=box;
+  if(headX===food.x && headY===food.y){ food=spawnFood(); snakeScore+=10; addPoints(10,"Snake Food"); }
+  else{ snake.pop(); }
+  const newHead={x:headX,y:headY};
   if(headX<0||headY<0||headX>=canvas.width||headY>=canvas.height||collision(newHead,snake)){
-    showModal("You lost 😅 Score saved.");
-    snake=[{x:9*box,y:10*box}];
-    direction=null;
-    snakeScore=0;
+    showModal("You lost 😅 Score saved."); snake=[{x:9*box,y:10*box}]; direction=null; snakeScore=0;
   }
-
   snake.unshift(newHead);
 }
 setInterval(drawSnakeGame,120);
 
-/* =====================
-   TIC TAC TOE
-===================== */
-const board = document.getElementById('board');
-const status = document.getElementById('status');
-let cells = Array(9).fill(null);
-let current = 'X';
-
-function renderBoard() {
-  board.innerHTML='';
-  cells.forEach((cell,i)=>{
-    const div = document.createElement('div');
-    div.className='cell';
-    div.textContent=cell||'';
-    div.onclick=()=>playMove(i);
-    board.appendChild(div);
-  });
-}
-
-function playMove(i){
-  if(cells[i]||checkWinner()) return;
-  cells[i]=current;
-
-  if(checkWinner()){
-    status.textContent='Winner: '+current;
-    addPoints(50,"TicTacToe Win");
-  } else if(!cells.includes(null)){
-    status.textContent='Draw 🤝';
-    addPoints(10,"TicTacToe Draw");
-  } else {
-    current=current==='X'?'O':'X';
-    status.textContent='Turn '+current;
-  }
-  renderBoard();
-}
-
-function checkWinner(){
-  const wins=[
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6]
-  ];
-  return wins.some(([a,b,c])=>cells[a]&&cells[a]===cells[b]&&cells[a]===cells[c]);
-}
+// ======= TIC TAC TOE =======
+const board = document.getElementById('board'); const status = document.getElementById('status'); let cells=Array(9).fill(null); let current='X';
+function renderBoard(){ board.innerHTML=''; cells.forEach((cell,i)=>{ const div=document.createElement('div'); div.className='cell'; div.textContent=cell||''; div.onclick=()=>playMove(i); board.appendChild(div); }); }
+function playMove(i){ if(cells[i]||checkWinner()) return; cells[i]=current;
+  if(checkWinner()){ status.textContent='Winner: '+current; addPoints(50,"TicTacToe Win"); } 
+  else if(!cells.includes(null)){ status.textContent='Draw 🤝'; addPoints(10,"TicTacToe Draw"); } 
+  else{ current=current==='X'?'O':'X'; status.textContent='Turn '+current; } renderBoard(); checkAchievements(); }
+function checkWinner(){ const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]; return wins.some(([a,b,c])=>cells[a]&&cells[a]===cells[b]&&cells[a]===cells[c]); }
 renderBoard();
 
-/* =====================
-   VIP SYSTEM
-===================== */
-function buyVIP(){
-  if(user.vip){
-    showModal("You are already VIP!");
-    return;
-  }
-  user.vip=true;
-  updateHUD();
-  showModal("VIP Activated! 🎉 Points gain x2 and access to top 3 prizes.");
-}
+// ======= VIP =======
+function buyVIP(){ if(user.vip){ showModal("You are already VIP!"); return; } user.vip=true; updateHUD(); showModal("VIP Activated! 🎉 Points gain x2 and top 3 rewards."); }
 
-/* =====================
-   CASHOUT / REWARD
-===================== */
-function requestCashout(){
-  if(user.points<1000){
-    showModal("Minimum 1000 points required to request a reward.");
-    return;
-  }
-  user.points-=1000;
-  updateHUD();
-  showModal("Reward request submitted! 🎁 (Demo)");
-}
+// ======= CASHOUT =======
+function requestCashout(){ if(user.points<1000){ showModal("Minimum 1000 points required."); return; } user.points-=1000; updateHUD(); showModal("Reward request submitted! 🎁"); }
 
-/* =====================
-   LEADERBOARD DEMO
-===================== */
-let leaderboard = [
-  {username:"Alice", points:450},
-  {username:"Bob", points:380},
-  {username:"Charlie", points:320},
-];
+// ======= SUPABASE LEADERBOARD =======
+async function saveScoreToDB(username,score){ const {error} = await supabase.from('leaderboard').insert([{username,score}]); if(error) console.log("DB Error:",error); }
+async function loadLeaderboardFromDB(){ const {data,error} = await supabase.from('leaderboard').select('*').order('score',{ascending:false}).limit(10); if(error) console.log("DB Load Error:",error); else updateLeaderboardUI(data); }
+function updateLeaderboardUI(data){ const tbody=document.querySelector("#leaderboardTable tbody"); tbody.innerHTML=''; data.forEach((u,i)=>{ const tr=document.createElement('tr'); if(u.username===user.username) tr.style.background="#22c55e33"; tr.innerHTML=`<td>${i+1}</td><td>${u.username}</td><td>${u.score}</td>`; tbody.appendChild(tr); }); }
+setInterval(loadLeaderboardFromDB,5000);
 
-function renderLeaderboard(){
-  const tbody = document.querySelector("#leaderboardTable tbody");
-  tbody.innerHTML='';
-  let sorted = leaderboard.sort((a,b)=>b.points-a.points);
-  sorted.forEach((u,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${i+1}</td><td>${u.username}</td><td>${u.points}</td>`;
-    tbody.appendChild(tr);
-  });
-}
-renderLeaderboard();
+// ======= TOP 3 REWARD =======
+async function getTop3Real(){ const {data} = await supabase.from('leaderboard').select('*').order('score',{ascending:false}).limit(3); return data; }
+async function distributeReward(){ const top3 = await getTop3Real(); top3.forEach((p,i)=>console.log(`Reward ${i+1} -> ${p.username}`)); showModal("Top 3 reward distributed! 🎉"); }
 
-/* =====================
-   SIMULATED AUTO PLAYERS
-===================== */
-setInterval(()=>{
-  leaderboard.forEach(u=>{u.points+=Math.floor(Math.random()*5);});
-  renderLeaderboard();
-},3000);
-
+// ======= FUN BACKGROUND =======
+const colors=["#2563eb","#22c55e","#ef4444","#facc15","#a855f7"]; let colorIndex=0; setInterval(()=>{ document.body.style.background=`linear-gradient(135deg, ${colors[colorIndex]}, #0f172a)`; colorIndex=(colorIndex+1)%colors.length; },7000);
 </script>
 </body>
 </html>
-<script>
-/* =====================
-   USER LEVEL SYSTEM
-===================== */
-user.level = 1;
-user.exp = 0;
-
-function addExp(amount) {
-  user.exp += amount;
-  const expNeeded = user.level * 100;
-  if(user.exp >= expNeeded) {
-    user.level++;
-    user.exp -= expNeeded;
-    showModal(`Level Up! 🎉 You are now Level ${user.level}`);
-  }
-  updateHUD();
-}
-
-function updateHUD() {
-  document.getElementById("hudPoints").innerText = user.points;
-  document.getElementById("hudVip").innerText = user.vip ? "Active 💎" : "Inactive";
-  document.getElementById("hudLevel")?.remove();
-  const hud = document.getElementById("hud");
-  const levelDiv = document.createElement("div");
-  levelDiv.id = "hudLevel";
-  levelDiv.innerHTML = `🎯 Level: <b>${user.level}</b> | EXP: <b>${user.exp}/${user.level*100}</b>`;
-  hud.appendChild(levelDiv);
-}
-
-/* =====================
-   ACHIEVEMENTS SYSTEM
-===================== */
-user.achievements = [];
-
-function checkAchievements(){
-  if(user.gamesPlayed>=10 && !user.achievements.includes("Gamer Beginner")){
-    user.achievements.push("Gamer Beginner");
-    showModal("Achievement Unlocked 🏆: Gamer Beginner (Played 10 games)");
-  }
-  if(user.points>=500 && !user.achievements.includes("Point Collector")){
-    user.achievements.push("Point Collector");
-    showModal("Achievement Unlocked 🏆: Point Collector (500 Points)");
-  }
-}
-
-/* =====================
-   SNAKE BONUS XP
-===================== */
-function drawSnakeGame() {
-  ctx.fillStyle = '#020617';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  snake.forEach((s,i)=>{
-    ctx.fillStyle = i===0?'#22c55e':'#16a34a';
-    ctx.fillRect(s.x,s.y,box,box);
-  });
-
-  ctx.fillStyle = '#ef4444';
-  ctx.fillRect(food.x,food.y,box,box);
-
-  let headX = snake[0].x;
-  let headY = snake[0].y;
-
-  if(direction==='LEFT') headX-=box;
-  if(direction==='UP') headY-=box;
-  if(direction==='RIGHT') headX+=box;
-  if(direction==='DOWN') headY+=box;
-
-  if(headX===food.x && headY===food.y){
-    food=spawnFood();
-    snakeScore+=10;
-    addPoints(10,"Snake Food");
-    addExp(5); // EXP for food
-    checkAchievements();
-  } else {
-    snake.pop();
-  }
-
-  const newHead = {x:headX,y:headY};
-
-  if(headX<0||headY<0||headX>=canvas.width||headY>=canvas.height||collision(newHead,snake)){
-    showModal("You lost 😅 Score saved.");
-    snake=[{x:9*box,y:10*box}];
-    direction=null;
-    snakeScore=0;
-    addExp(20); // EXP for game end
-    checkAchievements();
-  }
-
-  snake.unshift(newHead);
-}
-
-/* =====================
-   TIC TAC TOE BONUS XP
-===================== */
-function playMove(i){
-  if(cells[i]||checkWinner()) return;
-  cells[i]=current;
-
-  if(checkWinner()){
-    status.textContent='Winner: '+current;
-    addPoints(50,"TicTacToe Win");
-    addExp(30);
-  } else if(!cells.includes(null)){
-    status.textContent='Draw 🤝';
-    addPoints(10,"TicTacToe Draw");
-    addExp(10);
-  } else {
-    current=current==='X'?'O':'X';
-    status.textContent='Turn '+current;
-  }
-  renderBoard();
-  checkAchievements();
-}
-
-/* =====================
-   SIMULATED MULTIPLAYER / AUTO PLAYERS
-===================== */
-let simulatedPlayers = [
-  {username:"Alice", points:450},
-  {username:"Bob", points:380},
-  {username:"Charlie", points:320},
-  {username:"Eve", points:290},
-  {username:"Mallory", points:250}
-];
-
-function updateLeaderboard() {
-  // Merge real user
-  let leaderboardFull = [...simulatedPlayers, {username:user.username, points:user.points}];
-  leaderboardFull.sort((a,b)=>b.points-a.points);
-
-  const tbody = document.querySelector("#leaderboardTable tbody");
-  tbody.innerHTML='';
-  leaderboardFull.forEach((u,i)=>{
-    const tr=document.createElement('tr');
-    if(u.username===user.username) tr.style.background="#22c55e33";
-    tr.innerHTML=`<td>${i+1}</td><td>${u.username}</td><td>${u.points}</td>`;
-    tbody.appendChild(tr);
-  });
-}
-setInterval(()=>{
-  simulatedPlayers.forEach(p=>{p.points+=Math.floor(Math.random()*5);});
-  updateLeaderboard();
-},3000);
-
-/* =====================
-   TOP 3 REWARD SYSTEM
-===================== */
-function getTop3(){
-  let all = [...simulatedPlayers, {username:user.username, points:user.points}];
-  all.sort((a,b)=>b.points-a.points);
-  return all.slice(0,3);
-}
-
-function distributeReward(){
-  let top3 = getTop3();
-  top3.forEach((p,i)=>{
-    console.log(`Reward ${i+1} goes to ${p.username}`);
-  });
-  showModal("Top 3 reward distributed! 🎉 Check console for demo.");
-}
-
-/* =====================
-   VIP AUTO REWARD
-===================== */
-function vipBonus(){
-  if(user.vip){
-    addPoints(5,"VIP Passive Bonus");
-    addExp(2);
-  }
-}
-setInterval(vipBonus, 10000);
-
-/* =====================
-   FUN ANIMATIONS (BACKGROUND)
-===================== */
-const colors=["#2563eb","#22c55e","#ef4444","#facc15","#a855f7"];
-let colorIndex=0;
-setInterval(()=>{
-  document.body.style.background = `linear-gradient(135deg, ${colors[colorIndex]}, #0f172a)`;
-  colorIndex=(colorIndex+1)%colors.length;
-},7000);
-
-</script>
