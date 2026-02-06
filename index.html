@@ -1,16 +1,12 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>سایت بازی فرهاد</title>
+  <title>Farhad's Game Hub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    * { box-sizing: border-box; font-family: Tahoma, sans-serif; }
-    body {
-      margin: 0;
-      background: #0f172a;
-      color: #e5e7eb;
-    }
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { margin: 0; background: #0f172a; color: #e5e7eb; }
     header {
       padding: 20px;
       text-align: center;
@@ -23,6 +19,7 @@
       justify-content: center;
       gap: 15px;
       margin-top: 15px;
+      flex-wrap: wrap;
     }
     nav button {
       padding: 10px 18px;
@@ -32,13 +29,10 @@
       background: #020617;
       color: #93c5fd;
       font-size: 15px;
+      transition: 0.3s;
     }
-    nav button:hover { background: #020617cc; }
-    main {
-      padding: 30px;
-      max-width: 1000px;
-      margin: auto;
-    }
+    nav button:hover { background: #020617cc; transform: scale(1.05); }
+    main { padding: 30px; max-width: 1200px; margin: auto; }
     .game {
       display: none;
       margin-top: 30px;
@@ -54,11 +48,7 @@
       display: block;
       margin: 20px auto;
     }
-    .info {
-      text-align: center;
-      margin-top: 10px;
-    }
-    /* Tic Tac Toe */
+    .info { text-align: center; margin-top: 10px; }
     .board {
       display: grid;
       grid-template-columns: repeat(3, 100px);
@@ -76,344 +66,373 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      transition: 0.2s;
     }
-    .cell:hover { background: #020617cc; }
+    .cell:hover { background: #020617cc; transform: scale(1.05); }
     footer {
       margin-top: 50px;
       text-align: center;
       opacity: 0.6;
       font-size: 14px;
     }
+    /* HUD */
+    #hud {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      background: #020617;
+      border: 2px solid #2563eb;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 14px;
+      z-index: 1000;
+    }
+    #hud button {
+      margin-top: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+    /* Leaderboard Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      color: #e5e7eb;
+    }
+    th, td {
+      border: 1px solid #2563eb;
+      padding: 8px;
+      text-align: center;
+    }
+    th { background: #1e40af; }
+    tr:nth-child(even) { background: #111827; }
+    tr:hover { background: #2563eb33; }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+    }
+    .modal-content {
+      background-color: #0f172a;
+      margin: 15% auto;
+      padding: 20px;
+      border: 2px solid #2563eb;
+      width: 400px;
+      border-radius: 16px;
+      text-align: center;
+    }
+    .modal-content button {
+      margin-top: 15px;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🎮 سایت بازی‌های ساده فرهاد</h1>
-    <p>همه‌چی با HTML, CSS, JavaScript خالص</p>
-    <nav>
-      <button onclick="showGame('home')">خانه</button>
-      <button onclick="showGame('snake')">بازی مار</button>
-      <button onclick="showGame('ttt')">دوز (X O)</button>
-    </nav>
-  </header>
 
-  <main>
-    <section id="home" class="game active">
-      <h2>خوش اومدی 👋</h2>
-      <p>این یک سایت نمونه‌ست که داخلش چند تا بازی جاوااسکریپتی ساده قرار داده شده.</p>
-      <ul>
-        <li>🎯 بازی مار (Snake)</li>
-        <li>❌⭕ بازی دوز (Tic Tac Toe)</li>
-      </ul>
-    </section>
+<header>
+  <h1>🎮 Farhad's Game Hub</h1>
+  <p>Play simple skill games and compete for rewards!</p>
+  <nav>
+    <button onclick="showGame('home')">Home</button>
+    <button onclick="showGame('snake')">Snake Game</button>
+    <button onclick="showGame('ttt')">Tic Tac Toe</button>
+    <button onclick="showGame('leaderboard')">Leaderboard</button>
+    <button onclick="showGame('vip')">VIP</button>
+  </nav>
+</header>
 
-    <!-- Snake Game -->
-    <section id="snake" class="game">
-      <h2>🐍 بازی مار</h2>
-      <canvas id="snakeCanvas" width="400" height="400"></canvas>
-      <div class="info">با کلیدهای جهت‌دار بازی کن</div>
-    </section>
+<main>
+  <!-- Home -->
+  <section id="home" class="game active">
+    <h2>Welcome 👋</h2>
+    <p>This is a demo game hub with simple JavaScript games. Compete to be in the top 3 for prizes!</p>
+    <ul>
+      <li>🐍 Snake Game</li>
+      <li>❌⭕ Tic Tac Toe</li>
+    </ul>
+  </section>
 
-    <!-- Tic Tac Toe -->
-    <section id="ttt" class="game">
-      <h2>❌⭕ بازی دوز</h2>
-      <div class="board" id="board"></div>
-      <div class="info" id="status">نوبت X</div>
-    </section>
-  </main>
+  <!-- Snake -->
+  <section id="snake" class="game">
+    <h2>🐍 Snake Game</h2>
+    <canvas id="snakeCanvas" width="400" height="400"></canvas>
+    <div class="info">Use arrow keys to play</div>
+  </section>
 
-  <footer>
-    ساخته شده با ❤️ برای تمرین برنامه‌نویسی
-  </footer>
+  <!-- Tic Tac Toe -->
+  <section id="ttt" class="game">
+    <h2>❌⭕ Tic Tac Toe</h2>
+    <div class="board" id="board"></div>
+    <div class="info" id="status">Turn X</div>
+  </section>
 
-  <script>
-    /* Navigation */
-    function showGame(id) {
-      document.querySelectorAll('.game').forEach(g => g.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-    }
+  <!-- Leaderboard -->
+  <section id="leaderboard" class="game">
+    <h2>🏆 Leaderboard</h2>
+    <table id="leaderboardTable">
+      <thead>
+        <tr><th>Rank</th><th>Username</th><th>Points</th></tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </section>
 
-    /* =====================
-       Snake Game Logic
-       ===================== */
-    const canvas = document.getElementById('snakeCanvas');
-    const ctx = canvas.getContext('2d');
-    const box = 20;
-    let snake = [{ x: 9 * box, y: 10 * box }];
-    let direction = null;
-    let food = spawnFood();
+  <!-- VIP -->
+  <section id="vip" class="game">
+    <h2>💎 VIP Membership</h2>
+    <p>Subscribe to VIP for enhanced features and eligibility for top 3 rewards!</p>
+    <button onclick="buyVIP()">Subscribe VIP ($5/month)</button>
+  </section>
 
-    document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
-      if (e.key === 'ArrowUp' && direction !== 'DOWN') direction = 'UP';
-      if (e.key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
-      if (e.key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
-    });
+</main>
 
-    function spawnFood() {
-      return {
-        x: Math.floor(Math.random() * 19 + 1) * box,
-        y: Math.floor(Math.random() * 19 + 1) * box
-      };
-    }
+<footer>
+  Built with ❤️ by Farhad
+</footer>
 
-    function drawSnakeGame() {
-      ctx.fillStyle = '#020617';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+<div id="hud">
+  <div>⭐ Points: <b id="hudPoints">0</b></div>
+  <div>💎 VIP: <b id="hudVip">Inactive</b></div>
+  <button onclick="requestCashout()">Request Reward</button>
+</div>
 
-      snake.forEach((s, i) => {
-        ctx.fillStyle = i === 0 ? '#22c55e' : '#16a34a';
-        ctx.fillRect(s.x, s.y, box, box);
-      });
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content" id="modalContent">
+    <p id="modalText"></p>
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
 
-      ctx.fillStyle = '#ef4444';
-      ctx.fillRect(food.x, food.y, box, box);
-
-      let headX = snake[0].x;
-      let headY = snake[0].y;
-
-      if (direction === 'LEFT') headX -= box;
-      if (direction === 'UP') headY -= box;
-      if (direction === 'RIGHT') headX += box;
-      if (direction === 'DOWN') headY += box;
-
-      if (headX === food.x && headY === food.y) {
-        food = spawnFood();
-      } else {
-        snake.pop();
-      }
-
-      const newHead = { x: headX, y: headY };
-
-      if (
-        headX < 0 || headY < 0 ||
-        headX >= canvas.width || headY >= canvas.height ||
-        collision(newHead, snake)
-      ) {
-        snake = [{ x: 9 * box, y: 10 * box }];
-        direction = null;
-      }
-
-      snake.unshift(newHead);
-    }
-
-    function collision(head, array) {
-      return array.some(seg => seg.x === head.x && seg.y === head.y);
-    }
-
-    setInterval(drawSnakeGame, 120);
-
-    /* =====================
-       Tic Tac Toe Logic
-       ===================== */
-    const board = document.getElementById('board');
-    const status = document.getElementById('status');
-    let cells = Array(9).fill(null);
-    let current = 'X';
-
-    function renderBoard() {
-      board.innerHTML = '';
-      cells.forEach((cell, i) => {
-        const div = document.createElement('div');
-        div.className = 'cell';
-        div.textContent = cell || '';
-        div.onclick = () => playMove(i);
-        board.appendChild(div);
-      });
-    }
-
-    function playMove(i) {
-      if (cells[i] || checkWinner()) return;
-      cells[i] = current;
-      if (checkWinner()) {
-        status.textContent = 'برنده: ' + current;
-      } else if (!cells.includes(null)) {
-        status.textContent = 'مساوی 🤝';
-      } else {
-        current = current === 'X' ? 'O' : 'X';
-        status.textContent = 'نوبت ' + current;
-      }
-      renderBoard();
-    }
-
-    function checkWinner() {
-      const wins = [
-        [0,1,2],[3,4,5],[6,7,8],
-        [0,3,6],[1,4,7],[2,5,8],
-        [0,4,8],[2,4,6]
-      ];
-      return wins.some(([a,b,c]) => cells[a] && cells[a] === cells[b] && cells[a] === cells[c]);
-    }
-
-    renderBoard();
-  </script>
-</body>
-</html>
 <script>
 /* =====================
+   NAVIGATION
+===================== */
+function showGame(id) {
+  document.querySelectorAll('.game').forEach(g => g.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* =====================
    GLOBAL USER STATE
-   ===================== */
+===================== */
 let user = {
-  username: "Farhad",
+  username: "Player1",
   points: 0,
   vip: false,
   gamesPlayed: 0
 };
 
 /* =====================
-   UI UPDATE
-   ===================== */
+   HUD UPDATE
+===================== */
 function updateHUD() {
   document.getElementById("hudPoints").innerText = user.points;
-  document.getElementById("hudVip").innerText = user.vip ? "فعال 💎" : "غیرفعال";
+  document.getElementById("hudVip").innerText = user.vip ? "Active 💎" : "Inactive";
+}
+updateHUD();
+
+/* =====================
+   MODAL
+===================== */
+function showModal(msg) {
+  document.getElementById("modalText").innerText = msg;
+  document.getElementById("modal").style.display = "block";
+}
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
 }
 
 /* =====================
    POINT SYSTEM
-   ===================== */
-function addPoints(amount, reason = "") {
+===================== */
+function addPoints(amount, reason="") {
   let bonus = user.vip ? 2 : 1;
   let total = amount * bonus;
-
   user.points += total;
   user.gamesPlayed++;
-
   updateHUD();
-
-  console.log(`+${total} امتیاز | ${reason}`);
+  console.log(`+${total} points | ${reason}`);
 }
 
 /* =====================
-   EXTEND SNAKE GAME
-   ===================== */
-let score = 0;
+   SNAKE GAME
+===================== */
+const canvas = document.getElementById('snakeCanvas');
+const ctx = canvas.getContext('2d');
+const box = 20;
+let snake = [{ x: 9*box, y: 10*box }];
+let direction = null;
+let food = spawnFood();
+let snakeScore = 0;
+
+document.addEventListener('keydown', e => {
+  if(e.key==='ArrowLeft' && direction!=='RIGHT') direction='LEFT';
+  if(e.key==='ArrowUp' && direction!=='DOWN') direction='UP';
+  if(e.key==='ArrowRight' && direction!=='LEFT') direction='RIGHT';
+  if(e.key==='ArrowDown' && direction!=='UP') direction='DOWN';
+});
+
+function spawnFood() {
+  return {
+    x: Math.floor(Math.random()*19+1)*box,
+    y: Math.floor(Math.random()*19+1)*box
+  };
+}
+
+function collision(head,array){
+  return array.some(seg => seg.x===head.x && seg.y===head.y);
+}
 
 function drawSnakeGame() {
   ctx.fillStyle = '#020617';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  snake.forEach((s, i) => {
-    ctx.fillStyle = i === 0 ? '#22c55e' : '#16a34a';
-    ctx.fillRect(s.x, s.y, box, box);
+  snake.forEach((s,i)=>{
+    ctx.fillStyle = i===0?'#22c55e':'#16a34a';
+    ctx.fillRect(s.x,s.y,box,box);
   });
 
   ctx.fillStyle = '#ef4444';
-  ctx.fillRect(food.x, food.y, box, box);
+  ctx.fillRect(food.x,food.y,box,box);
 
   let headX = snake[0].x;
   let headY = snake[0].y;
 
-  if (direction === 'LEFT') headX -= box;
-  if (direction === 'UP') headY -= box;
-  if (direction === 'RIGHT') headX += box;
-  if (direction === 'DOWN') headY += box;
+  if(direction==='LEFT') headX-=box;
+  if(direction==='UP') headY-=box;
+  if(direction==='RIGHT') headX+=box;
+  if(direction==='DOWN') headY+=box;
 
-  if (headX === food.x && headY === food.y) {
-    food = spawnFood();
-    score += 10;
-    addPoints(10, "Snake Food");
+  if(headX===food.x && headY===food.y){
+    food=spawnFood();
+    snakeScore+=10;
+    addPoints(10,"Snake Food");
   } else {
     snake.pop();
   }
 
-  const newHead = { x: headX, y: headY };
+  const newHead = {x:headX,y:headY};
 
-  if (
-    headX < 0 || headY < 0 ||
-    headX >= canvas.width || headY >= canvas.height ||
-    collision(newHead, snake)
-  ) {
-    alert("باختی 😅 امتیاز بازی ثبت شد");
-    score = 0;
-    snake = [{ x: 9 * box, y: 10 * box }];
-    direction = null;
+  if(headX<0||headY<0||headX>=canvas.width||headY>=canvas.height||collision(newHead,snake)){
+    showModal("You lost 😅 Score saved.");
+    snake=[{x:9*box,y:10*box}];
+    direction=null;
+    snakeScore=0;
   }
 
   snake.unshift(newHead);
 }
+setInterval(drawSnakeGame,120);
 
 /* =====================
-   EXTEND TIC TAC TOE
-   ===================== */
-function playMove(i) {
-  if (cells[i] || checkWinner()) return;
+   TIC TAC TOE
+===================== */
+const board = document.getElementById('board');
+const status = document.getElementById('status');
+let cells = Array(9).fill(null);
+let current = 'X';
 
-  cells[i] = current;
+function renderBoard() {
+  board.innerHTML='';
+  cells.forEach((cell,i)=>{
+    const div = document.createElement('div');
+    div.className='cell';
+    div.textContent=cell||'';
+    div.onclick=()=>playMove(i);
+    board.appendChild(div);
+  });
+}
 
-  if (checkWinner()) {
-    status.textContent = 'برنده: ' + current;
-    if (current === "X") {
-      addPoints(50, "TicTacToe Win");
-    }
-  } else if (!cells.includes(null)) {
-    status.textContent = 'مساوی 🤝';
-    addPoints(10, "TicTacToe Draw");
+function playMove(i){
+  if(cells[i]||checkWinner()) return;
+  cells[i]=current;
+
+  if(checkWinner()){
+    status.textContent='Winner: '+current;
+    addPoints(50,"TicTacToe Win");
+  } else if(!cells.includes(null)){
+    status.textContent='Draw 🤝';
+    addPoints(10,"TicTacToe Draw");
   } else {
-    current = current === 'X' ? 'O' : 'X';
-    status.textContent = 'نوبت ' + current;
+    current=current==='X'?'O':'X';
+    status.textContent='Turn '+current;
   }
-
   renderBoard();
 }
 
-/* =====================
-   WALLET & CASHOUT
-   ===================== */
-function requestCashout() {
-  if (user.points < 1000) {
-    alert("حداقل 1000 امتیاز برای برداشت لازمه");
-    return;
-  }
-
-  user.points -= 1000;
-  updateHUD();
-
-  alert("درخواست برداشت ثبت شد 💰 (نمونه)");
+function checkWinner(){
+  const wins=[
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
+  ];
+  return wins.some(([a,b,c])=>cells[a]&&cells[a]===cells[b]&&cells[a]===cells[c]);
 }
+renderBoard();
 
 /* =====================
    VIP SYSTEM
-   ===================== */
-function buyVIP() {
-  // اینجا بعداً به زرین‌پال وصل میشه
-  user.vip = true;
+===================== */
+function buyVIP(){
+  if(user.vip){
+    showModal("You are already VIP!");
+    return;
+  }
+  user.vip=true;
   updateHUD();
-  alert("VIP فعال شد 💎 (نمونه)");
+  showModal("VIP Activated! 🎉 Points gain x2 and access to top 3 prizes.");
 }
 
 /* =====================
-   SIMPLE HUD
-   ===================== */
-const hud = document.createElement("div");
-hud.style.position = "fixed";
-hud.style.bottom = "15px";
-hud.style.left = "15px";
-hud.style.background = "#020617";
-hud.style.border = "2px solid #2563eb";
-hud.style.borderRadius = "14px";
-hud.style.padding = "12px 16px";
-hud.style.fontSize = "14px";
-hud.innerHTML = `
-  <div>⭐ امتیاز: <b id="hudPoints">0</b></div>
-  <div>💎 VIP: <b id="hudVip">غیرفعال</b></div>
-  <button onclick="requestCashout()" style="margin-top:8px;">برداشت</button>
-  <button onclick="buyVIP()" style="margin-top:6px;">خرید VIP</button>
-`;
-document.body.appendChild(hud);
-
-updateHUD();
+   CASHOUT / REWARD
+===================== */
+function requestCashout(){
+  if(user.points<1000){
+    showModal("Minimum 1000 points required to request a reward.");
+    return;
+  }
+  user.points-=1000;
+  updateHUD();
+  showModal("Reward request submitted! 🎁 (Demo)");
+}
 
 /* =====================
-   FUTURE BACKEND API (READY)
-   ===================== */
-// fetch('https://api.yoursite.com/save-score', {
-//   method: 'POST',
-//   headers: { 'Content-Type': 'application/json' },
-//   body: JSON.stringify({
-//     user: user.username,
-//     points: user.points
-//   })
-// });
+   LEADERBOARD DEMO
+===================== */
+let leaderboard = [
+  {username:"Alice", points:450},
+  {username:"Bob", points:380},
+  {username:"Charlie", points:320},
+];
+
+function renderLeaderboard(){
+  const tbody = document.querySelector("#leaderboardTable tbody");
+  tbody.innerHTML='';
+  let sorted = leaderboard.sort((a,b)=>b.points-a.points);
+  sorted.forEach((u,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${i+1}</td><td>${u.username}</td><td>${u.points}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+renderLeaderboard();
+
+/* =====================
+   SIMULATED AUTO PLAYERS
+===================== */
+setInterval(()=>{
+  leaderboard.forEach(u=>{u.points+=Math.floor(Math.random()*5);});
+  renderLeaderboard();
+},3000);
 
 </script>
-
+</body>
+</html>
