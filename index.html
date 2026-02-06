@@ -1,112 +1,251 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Google Search Console verification -->
-  <meta name="google-site-verification" content="R9u_4IcWPSXkD3p91sX9v48IjYacGMBBK7LACdJwGkY" />
-
-  <!-- SEO Basics -->
-  <title>سایت شخصی فرهاد | طراحی وب</title>
-  <meta name="description" content="سایت شخصی فرهاد پولدار، معرفی، نمونه‌کارها، خدمات طراحی وب و تماس با من">
-
-  <!-- Favicon -->
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-
-  <!-- CSS داخلی برای رنگ‌بندی و ظاهر -->
+  <meta charset="UTF-8" />
+  <title>سایت بازی فرهاد</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
+    * { box-sizing: border-box; font-family: Tahoma, sans-serif; }
     body {
-      font-family: Tahoma, sans-serif;
-      background-color: #F9FAFB; /* پس‌زمینه روشن */
-      color: #111827; /* رنگ متن */
-      line-height: 1.6;
       margin: 0;
-      padding: 0;
+      background: #0f172a;
+      color: #e5e7eb;
     }
-
     header {
-      background-color: #1D4ED8; /* رنگ اصلی */
-      color: white;
-      padding: 2rem;
+      padding: 20px;
       text-align: center;
+      background: linear-gradient(135deg, #2563eb, #1e40af);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
-
+    header h1 { margin: 0; }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    nav button {
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: #020617;
+      color: #93c5fd;
+      font-size: 15px;
+    }
+    nav button:hover { background: #020617cc; }
     main {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      padding: 30px;
+      max-width: 1000px;
+      margin: auto;
     }
-
-    h1, h2 {
-      margin-top: 0;
+    .game {
+      display: none;
+      margin-top: 30px;
+      background: #020617;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     }
-
-    h2 {
-      color: #1D4ED8; /* رنگ اصلی برای تیترها */
-      margin-bottom: 0.5rem;
+    .game.active { display: block; }
+    canvas {
+      background: #020617;
+      border: 2px solid #2563eb;
+      display: block;
+      margin: 20px auto;
     }
-
-    a {
-      color: #FBBF24; /* رنگ مکمل */
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    footer {
+    .info {
       text-align: center;
-      padding: 1rem;
-      background-color: #111827;
-      color: white;
+      margin-top: 10px;
     }
-
-    ul {
-      list-style-type: none;
-      padding: 0;
+    /* Tic Tac Toe */
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
     }
-
-    li {
-      margin-bottom: 0.5rem;
+    .cell {
+      width: 100px;
+      height: 100px;
+      background: #020617;
+      border: 2px solid #2563eb;
+      font-size: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
     }
-
-    section {
-      margin-bottom: 2rem;
+    .cell:hover { background: #020617cc; }
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      opacity: 0.6;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>سایت شخصی فرهاد پولدار</h1>
-    <p>طراحی وب، نمونه‌کارها و معرفی شخصی</p>
+    <h1>🎮 سایت بازی‌های ساده فرهاد</h1>
+    <p>همه‌چی با HTML, CSS, JavaScript خالص</p>
+    <nav>
+      <button onclick="showGame('home')">خانه</button>
+      <button onclick="showGame('snake')">بازی مار</button>
+      <button onclick="showGame('ttt')">دوز (X O)</button>
+    </nav>
   </header>
 
   <main>
-    <section>
-      <h2>درباره من</h2>
-      <p>سلام، من فرهاد هستم و این سایت شخصی من برای معرفی نمونه‌کارها و خدمات طراحی وب من است. هدفم این است که بهترین تجربه را به بازدیدکنندگان ارائه دهم.</p>
-    </section>
-
-    <section>
-      <h2>نمونه‌کارها</h2>
-      <p>در این بخش می‌توانید نمونه‌کارهای طراحی وب من را ببینید و با کیفیت کارم آشنا شوید. هر پروژه شامل توضیح و تصویر نمونه است.</p>
-    </section>
-
-    <section>
-      <h2>تماس با من</h2>
-      <p>برای ارتباط با من از طریق ایمیل یا شبکه‌های اجتماعی می‌توانید اقدام کنید:</p>
+    <section id="home" class="game active">
+      <h2>خوش اومدی 👋</h2>
+      <p>این یک سایت نمونه‌ست که داخلش چند تا بازی جاوااسکریپتی ساده قرار داده شده.</p>
       <ul>
-        <li><a href="https://t.me/farhadpoldar" target="_blank">تلگرام</a></li>
-        <li><a href="https://www.instagram.com/farhadpoldar" target="_blank">اینستاگرام</a></li>
-        <li><a href="mailto:farhad@example.com">ایمیل</a></li>
+        <li>🎯 بازی مار (Snake)</li>
+        <li>❌⭕ بازی دوز (Tic Tac Toe)</li>
       </ul>
+    </section>
+
+    <!-- Snake Game -->
+    <section id="snake" class="game">
+      <h2>🐍 بازی مار</h2>
+      <canvas id="snakeCanvas" width="400" height="400"></canvas>
+      <div class="info">با کلیدهای جهت‌دار بازی کن</div>
+    </section>
+
+    <!-- Tic Tac Toe -->
+    <section id="ttt" class="game">
+      <h2>❌⭕ بازی دوز</h2>
+      <div class="board" id="board"></div>
+      <div class="info" id="status">نوبت X</div>
     </section>
   </main>
 
   <footer>
-    <p>© 2026 فرهاد پولدار | همه حقوق محفوظ است</p>
+    ساخته شده با ❤️ برای تمرین برنامه‌نویسی
   </footer>
+
+  <script>
+    /* Navigation */
+    function showGame(id) {
+      document.querySelectorAll('.game').forEach(g => g.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    /* =====================
+       Snake Game Logic
+       ===================== */
+    const canvas = document.getElementById('snakeCanvas');
+    const ctx = canvas.getContext('2d');
+    const box = 20;
+    let snake = [{ x: 9 * box, y: 10 * box }];
+    let direction = null;
+    let food = spawnFood();
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
+      if (e.key === 'ArrowUp' && direction !== 'DOWN') direction = 'UP';
+      if (e.key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
+      if (e.key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
+    });
+
+    function spawnFood() {
+      return {
+        x: Math.floor(Math.random() * 19 + 1) * box,
+        y: Math.floor(Math.random() * 19 + 1) * box
+      };
+    }
+
+    function drawSnakeGame() {
+      ctx.fillStyle = '#020617';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      snake.forEach((s, i) => {
+        ctx.fillStyle = i === 0 ? '#22c55e' : '#16a34a';
+        ctx.fillRect(s.x, s.y, box, box);
+      });
+
+      ctx.fillStyle = '#ef4444';
+      ctx.fillRect(food.x, food.y, box, box);
+
+      let headX = snake[0].x;
+      let headY = snake[0].y;
+
+      if (direction === 'LEFT') headX -= box;
+      if (direction === 'UP') headY -= box;
+      if (direction === 'RIGHT') headX += box;
+      if (direction === 'DOWN') headY += box;
+
+      if (headX === food.x && headY === food.y) {
+        food = spawnFood();
+      } else {
+        snake.pop();
+      }
+
+      const newHead = { x: headX, y: headY };
+
+      if (
+        headX < 0 || headY < 0 ||
+        headX >= canvas.width || headY >= canvas.height ||
+        collision(newHead, snake)
+      ) {
+        snake = [{ x: 9 * box, y: 10 * box }];
+        direction = null;
+      }
+
+      snake.unshift(newHead);
+    }
+
+    function collision(head, array) {
+      return array.some(seg => seg.x === head.x && seg.y === head.y);
+    }
+
+    setInterval(drawSnakeGame, 120);
+
+    /* =====================
+       Tic Tac Toe Logic
+       ===================== */
+    const board = document.getElementById('board');
+    const status = document.getElementById('status');
+    let cells = Array(9).fill(null);
+    let current = 'X';
+
+    function renderBoard() {
+      board.innerHTML = '';
+      cells.forEach((cell, i) => {
+        const div = document.createElement('div');
+        div.className = 'cell';
+        div.textContent = cell || '';
+        div.onclick = () => playMove(i);
+        board.appendChild(div);
+      });
+    }
+
+    function playMove(i) {
+      if (cells[i] || checkWinner()) return;
+      cells[i] = current;
+      if (checkWinner()) {
+        status.textContent = 'برنده: ' + current;
+      } else if (!cells.includes(null)) {
+        status.textContent = 'مساوی 🤝';
+      } else {
+        current = current === 'X' ? 'O' : 'X';
+        status.textContent = 'نوبت ' + current;
+      }
+      renderBoard();
+    }
+
+    function checkWinner() {
+      const wins = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return wins.some(([a,b,c]) => cells[a] && cells[a] === cells[b] && cells[a] === cells[c]);
+    }
+
+    renderBoard();
+  </script>
 </body>
 </html>
