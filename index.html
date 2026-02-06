@@ -436,3 +436,187 @@ setInterval(()=>{
 </script>
 </body>
 </html>
+<script>
+/* =====================
+   USER LEVEL SYSTEM
+===================== */
+user.level = 1;
+user.exp = 0;
+
+function addExp(amount) {
+  user.exp += amount;
+  const expNeeded = user.level * 100;
+  if(user.exp >= expNeeded) {
+    user.level++;
+    user.exp -= expNeeded;
+    showModal(`Level Up! 🎉 You are now Level ${user.level}`);
+  }
+  updateHUD();
+}
+
+function updateHUD() {
+  document.getElementById("hudPoints").innerText = user.points;
+  document.getElementById("hudVip").innerText = user.vip ? "Active 💎" : "Inactive";
+  document.getElementById("hudLevel")?.remove();
+  const hud = document.getElementById("hud");
+  const levelDiv = document.createElement("div");
+  levelDiv.id = "hudLevel";
+  levelDiv.innerHTML = `🎯 Level: <b>${user.level}</b> | EXP: <b>${user.exp}/${user.level*100}</b>`;
+  hud.appendChild(levelDiv);
+}
+
+/* =====================
+   ACHIEVEMENTS SYSTEM
+===================== */
+user.achievements = [];
+
+function checkAchievements(){
+  if(user.gamesPlayed>=10 && !user.achievements.includes("Gamer Beginner")){
+    user.achievements.push("Gamer Beginner");
+    showModal("Achievement Unlocked 🏆: Gamer Beginner (Played 10 games)");
+  }
+  if(user.points>=500 && !user.achievements.includes("Point Collector")){
+    user.achievements.push("Point Collector");
+    showModal("Achievement Unlocked 🏆: Point Collector (500 Points)");
+  }
+}
+
+/* =====================
+   SNAKE BONUS XP
+===================== */
+function drawSnakeGame() {
+  ctx.fillStyle = '#020617';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  snake.forEach((s,i)=>{
+    ctx.fillStyle = i===0?'#22c55e':'#16a34a';
+    ctx.fillRect(s.x,s.y,box,box);
+  });
+
+  ctx.fillStyle = '#ef4444';
+  ctx.fillRect(food.x,food.y,box,box);
+
+  let headX = snake[0].x;
+  let headY = snake[0].y;
+
+  if(direction==='LEFT') headX-=box;
+  if(direction==='UP') headY-=box;
+  if(direction==='RIGHT') headX+=box;
+  if(direction==='DOWN') headY+=box;
+
+  if(headX===food.x && headY===food.y){
+    food=spawnFood();
+    snakeScore+=10;
+    addPoints(10,"Snake Food");
+    addExp(5); // EXP for food
+    checkAchievements();
+  } else {
+    snake.pop();
+  }
+
+  const newHead = {x:headX,y:headY};
+
+  if(headX<0||headY<0||headX>=canvas.width||headY>=canvas.height||collision(newHead,snake)){
+    showModal("You lost 😅 Score saved.");
+    snake=[{x:9*box,y:10*box}];
+    direction=null;
+    snakeScore=0;
+    addExp(20); // EXP for game end
+    checkAchievements();
+  }
+
+  snake.unshift(newHead);
+}
+
+/* =====================
+   TIC TAC TOE BONUS XP
+===================== */
+function playMove(i){
+  if(cells[i]||checkWinner()) return;
+  cells[i]=current;
+
+  if(checkWinner()){
+    status.textContent='Winner: '+current;
+    addPoints(50,"TicTacToe Win");
+    addExp(30);
+  } else if(!cells.includes(null)){
+    status.textContent='Draw 🤝';
+    addPoints(10,"TicTacToe Draw");
+    addExp(10);
+  } else {
+    current=current==='X'?'O':'X';
+    status.textContent='Turn '+current;
+  }
+  renderBoard();
+  checkAchievements();
+}
+
+/* =====================
+   SIMULATED MULTIPLAYER / AUTO PLAYERS
+===================== */
+let simulatedPlayers = [
+  {username:"Alice", points:450},
+  {username:"Bob", points:380},
+  {username:"Charlie", points:320},
+  {username:"Eve", points:290},
+  {username:"Mallory", points:250}
+];
+
+function updateLeaderboard() {
+  // Merge real user
+  let leaderboardFull = [...simulatedPlayers, {username:user.username, points:user.points}];
+  leaderboardFull.sort((a,b)=>b.points-a.points);
+
+  const tbody = document.querySelector("#leaderboardTable tbody");
+  tbody.innerHTML='';
+  leaderboardFull.forEach((u,i)=>{
+    const tr=document.createElement('tr');
+    if(u.username===user.username) tr.style.background="#22c55e33";
+    tr.innerHTML=`<td>${i+1}</td><td>${u.username}</td><td>${u.points}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+setInterval(()=>{
+  simulatedPlayers.forEach(p=>{p.points+=Math.floor(Math.random()*5);});
+  updateLeaderboard();
+},3000);
+
+/* =====================
+   TOP 3 REWARD SYSTEM
+===================== */
+function getTop3(){
+  let all = [...simulatedPlayers, {username:user.username, points:user.points}];
+  all.sort((a,b)=>b.points-a.points);
+  return all.slice(0,3);
+}
+
+function distributeReward(){
+  let top3 = getTop3();
+  top3.forEach((p,i)=>{
+    console.log(`Reward ${i+1} goes to ${p.username}`);
+  });
+  showModal("Top 3 reward distributed! 🎉 Check console for demo.");
+}
+
+/* =====================
+   VIP AUTO REWARD
+===================== */
+function vipBonus(){
+  if(user.vip){
+    addPoints(5,"VIP Passive Bonus");
+    addExp(2);
+  }
+}
+setInterval(vipBonus, 10000);
+
+/* =====================
+   FUN ANIMATIONS (BACKGROUND)
+===================== */
+const colors=["#2563eb","#22c55e","#ef4444","#facc15","#a855f7"];
+let colorIndex=0;
+setInterval(()=>{
+  document.body.style.background = `linear-gradient(135deg, ${colors[colorIndex]}, #0f172a)`;
+  colorIndex=(colorIndex+1)%colors.length;
+},7000);
+
+</script>
